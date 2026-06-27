@@ -27,6 +27,11 @@ from core.acoustic_vitruvian_engine import (
     PHI, DELTA_T,
 )
 
+from core.paninian_compiler.ashtadhyayi_parser import AshtadhyayiParser
+from core.paninian_compiler.quantum_transpiler import QuantumTranspiler
+from core.cuboctahedron_db.geometric_kernel import GeometricKernel
+from core.hardware_bridge.qpu_interface import QPUInterface
+
 app = FastAPI(
     title="Bharat Next Big Cinema — Acoustic Vitruvian Engine API",
     description="Zero-latency unified sensory engine: dome + CES-1 wearable",
@@ -40,6 +45,12 @@ app.add_middleware(
 )
 
 AVE = AcousticVitruvianEngine()
+
+# Initialize Quantum-Paninian Engine Singletons
+QPE_Parser = AshtadhyayiParser()
+QPE_Transpiler = QuantumTranspiler()
+QPE_DB = GeometricKernel()
+QPE_QPU = QPUInterface()
 
 # REQUEST MODELS
 class SpatialVectorModel(BaseModel):
@@ -56,6 +67,10 @@ class AudioObjectModel(BaseModel):
     amplitude: float = 1.0
     frequency_hz: float = 1000.0
     scent_tag: Optional[str] = None
+
+class QuantumCompileRequest(BaseModel):
+    tokens: List[str]
+    seed_id: int = 42
 
 class TickRequest(BaseModel):
     audio_objects: List[AudioObjectModel]
@@ -198,6 +213,31 @@ def hot_swap(req: HotSwapRequest):
 @app.get("/api/power/status")
 def power_status():
     return AVE.power.power_snapshot()
+
+@app.post("/api/engine/compile")
+def compile_quantum_paninian_state(req: QuantumCompileRequest):
+    # 1. Linguistic Parsing (C++ Vyakarana)
+    parsed_sequence = QPE_Parser.parse_sequence(req.tokens)
+    
+    # 2. Transpile to Abstract Quantum State
+    abstract_logic = QPE_Transpiler.transpile(parsed_sequence)
+    state_vector = QPE_Transpiler.phoneme_to_state(parsed_sequence[0] if parsed_sequence else "a")
+    
+    # 3. Hash to 12D Geometric DB (C++ Cuboctahedron Kernel)
+    QPE_DB.store_seed(req.seed_id, state_vector)
+    retrieved_signature = QPE_DB.retrieve_seed(req.seed_id)
+    
+    # 4. Generate OpenQASM 2.0 (Physical Hardware Bridge)
+    qasm_code = QPE_QPU.generate_qasm(abstract_logic)
+    
+    return {
+        "status": "success",
+        "input_tokens": req.tokens,
+        "vyakarana_parsed_tokens": parsed_sequence,
+        "abstract_logic_operations": len(abstract_logic),
+        "geometric_signature_12d": retrieved_signature.tolist(),
+        "openqasm": qasm_code
+    }
 
 connected_clients: list = []
 
