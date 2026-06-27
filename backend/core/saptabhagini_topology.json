@@ -1,0 +1,14 @@
+{
+  "network_identity": "The Seven Sisters / Saptabhagini",
+  "nodes": [
+    "Prathama",
+    "Dvitiya",
+    "Tritiya",
+    "Chaturthi",
+    "Panchami",
+    "Shashthi",
+    "Saptami"
+  ],
+  "quantum_gate_layers": 3,
+  "steane_parity_weights": [1, 0, 1, 1, 0, 1, 0]
+}

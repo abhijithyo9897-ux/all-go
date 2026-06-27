@@ -1,0 +1,166 @@
+<div class="min-h-screen bg-slate-50 font-sans">
+
+    <!-- Main Content -->
+    <main class="p-8">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Deduction Rules & Company Allowances</h1>
+                    <p class="text-slate-500 mt-1">Configure automated calculations for payroll.</p>
+                </div>
+                <button (click)="toggleForm()" class="btn bg-slate-800 hover:bg-slate-700 text-white border-none gap-2">
+                    @if(showForm()) {
+                    Close Form
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add New {{activeTab() === 'Rules' ? 'Rule' : 'Allowance'}}
+                    }
+                </button>
+            </div>
+
+            <!-- Add Form (Collapsible) -->
+            @if (showForm()) {
+            <div
+                class="card bg-white border border-slate-100 p-6 rounded-xl shadow-sm mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+                <h2 class="text-sm font-bold uppercase tracking-wide mb-6 text-slate-400">
+                    New {{activeTab() === 'Rules' ? 'Deduction Rule' : 'Company Allowance'}}
+                </h2>
+                <form class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Name</span></label>
+                        <input type="text" class="input input-bordered w-full h-11 bg-white text-slate-700"
+                            placeholder="e.g. Health Insurance" />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Type</span></label>
+                        <select class="select select-bordered w-full h-11 bg-white text-slate-700 font-normal">
+                            <option>Fixed Amount</option>
+                            <option>Percentage of Basic</option>
+                            <option>Percentage of Gross</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Value</span></label>
+                        <div class="relative">
+                            <input type="text" class="input input-bordered w-full h-11 bg-white text-slate-700"
+                                placeholder="0.00" />
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 justify-end md:col-start-4">
+                        <button type="button" (click)="showForm.set(false)"
+                            class="btn btn-ghost text-slate-500">Cancel</button>
+                        <button type="submit"
+                            class="btn bg-blue-600 hover:bg-blue-700 text-white border-none px-6">Save</button>
+                    </div>
+                </form>
+            </div>
+            }
+
+            <!-- Tabs -->
+            <div class="mb-6">
+                <div role="tablist"
+                    class="tabs tabs-boxed bg-white p-1 rounded-lg border border-slate-100 inline-flex shadow-sm">
+                    <a role="tab" class="tab px-6 h-9 transition-colors rounded-md"
+                        [class.bg-slate-800]="activeTab() === 'Rules'" [class.text-white]="activeTab() === 'Rules'"
+                        [class.text-slate-500]="activeTab() !== 'Rules'" (click)="setTab('Rules')">Deduction Rules</a>
+                    <a role="tab" class="tab px-6 h-9 transition-colors rounded-md"
+                        [class.bg-slate-800]="activeTab() === 'Allowances'"
+                        [class.text-white]="activeTab() === 'Allowances'"
+                        [class.text-slate-500]="activeTab() !== 'Allowances'" (click)="setTab('Allowances')">Company
+                        Allowances</a>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="card bg-white shadow-sm border border-slate-100 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <tr>
+                                <th class="pl-6 py-4">Name</th>
+                                <th class="py-4">Type</th>
+                                <th class="py-4">Value</th>
+                                <th class="py-4">Criteria</th>
+                                <th class="py-4">Status</th>
+                                <th class="pr-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (activeTab() === 'Rules') {
+                            @for (rule of rules; track rule.id) {
+                            <tr class="hover:bg-slate-50 border-b border-slate-50 last:border-none">
+                                <td class="pl-6 py-4 font-medium text-slate-800">{{rule.name}}</td>
+                                <td class="text-slate-600">{{rule.type}}</td>
+                                <td class="font-mono text-slate-700 font-semibold">{{rule.value}}</td>
+                                <td class="text-slate-500 text-sm">{{rule.criteria}}</td>
+                                <td>
+                                    <input type="checkbox" class="toggle toggle-success toggle-sm"
+                                        [checked]="rule.isActive" />
+                                </td>
+                                <td class="pr-6 text-right">
+                                    <button class="btn btn-ghost btn-sm text-slate-400 hover:text-blue-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm text-slate-400 hover:text-red-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                            } @else {
+                            @for (allowance of allowances; track allowance.id) {
+                            <tr class="hover:bg-slate-50 border-b border-slate-50 last:border-none">
+                                <td class="pl-6 py-4 font-medium text-slate-800">{{allowance.name}}</td>
+                                <td class="text-slate-600">{{allowance.type}}</td>
+                                <td class="font-mono text-slate-700 font-semibold">{{allowance.value}}</td>
+                                <td class="text-slate-500 text-sm">{{allowance.criteria}}</td>
+                                <td>
+                                    <input type="checkbox" class="toggle toggle-success toggle-sm"
+                                        [checked]="allowance.isActive" />
+                                </td>
+                                <td class="pr-6 text-right">
+                                    <button class="btn btn-ghost btn-sm text-slate-400 hover:text-blue-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm text-slate-400 hover:text-red-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

@@ -1,0 +1,155 @@
+<div class="min-h-screen bg-slate-50 font-sans">
+
+    <!-- Main Content -->
+    <main class="p-8">
+        <div class="max-w-5xl mx-auto">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-slate-800">PaySlip Details</h1>
+
+                <!-- Profile Dropdown/Avatar (Placeholder as per design top right) -->
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-slate-600">Admin</span>
+                    <div class="avatar placeholder">
+                        <div class="bg-blue-600 text-white rounded-full w-8 h-8">
+                            <span class="text-xs">A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Details Section -->
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- Earnings Card -->
+                    <div class="card bg-white shadow-sm border border-slate-100 p-6 rounded-xl">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">Earnings</h3>
+                                <p class="text-slate-400 text-sm">Salary structure breakdown</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="avatar">
+                                    <div
+                                        class="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                        <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                                            alt="User" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800">{{employee.name}}</p>
+                                    <p class="text-xs text-slate-500">{{employee.role}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">Basic Salary</span>
+                                <span class="font-medium text-slate-800 font-mono">${{payslipData.basicSalary}}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">Transport Allowance</span>
+                                <span
+                                    class="font-medium text-slate-800 font-mono">${{payslipData.transportAllowance}}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">House Rent Allowance</span>
+                                <span
+                                    class="font-medium text-slate-800 font-mono">${{payslipData.houseRentAllowance}}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">Special Allowance</span>
+                                <span
+                                    class="font-medium text-slate-800 font-mono">${{payslipData.specialAllowance}}</span>
+                            </div>
+                            <div class="flex justify-between pt-2">
+                                <span class="text-slate-700 font-semibold">Total Gross Salary</span>
+                                <span class="font-bold text-slate-900 font-mono">${{payslipData.grossSalary}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deductions Card -->
+                    <div class="card bg-white shadow-sm border border-slate-100 p-6 rounded-xl">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-bold text-slate-800">Deductions</h3>
+                            <p class="text-slate-400 text-sm">All applied deductions</p>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">Provident Fund</span>
+                                <span class="font-medium text-red-500 font-mono">-${{deductions.providentFund}}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">Professional Tax</span>
+                                <span class="font-medium text-red-500 font-mono">-${{deductions.professionalTax}}</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-50">
+                                <span class="text-slate-500 text-sm">TDS</span>
+                                <span class="font-medium text-red-500 font-mono">-${{deductions.tds}}</span>
+                            </div>
+                            <div class="flex justify-between pt-2">
+                                <span class="text-slate-700 font-semibold">Total Deductions</span>
+                                <span class="font-bold text-red-600 font-mono">-${{deductions.totalDeductions}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Sidebar Summary -->
+                <div class="lg:col-span-4 space-y-6">
+
+                    <!-- Net Pay Card -->
+                    <div class="card bg-slate-800 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="text-slate-300 text-sm mb-1">Net Pay</p>
+                            <h2 class="text-4xl font-bold mb-4">${{payslipData.netPay}}</h2>
+
+                            <div class="space-y-2 text-sm text-slate-300">
+                                <div class="flex justify-between">
+                                    <span>Paid Days</span>
+                                    <span class="font-medium text-white">{{payslipData.paidDays}} Days</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>LOP Days</span>
+                                    <span class="font-medium text-white">{{payslipData.lopDays}} Days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Decorative Circle -->
+                        <div
+                            class="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500 rounded-full opacity-20 blur-xl">
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <button
+                        class="btn btn-block bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 gap-2"
+                        (click)="downloadPayslip()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Download Payslip
+                    </button>
+
+                    <div class="card bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <h4 class="font-medium text-slate-800 mb-2">Note</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            This generated payslip is for the month of February 2024. Please contact HR for any
+                            discrepancies.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

@@ -1,0 +1,237 @@
+<div class="p-8 max-w-7xl mx-auto space-y-6 bg-gray-50 min-h-screen font-sans text-slate-800">
+
+    <!-- Header -->
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Daily Attendance Marking</h1>
+        <p class="text-gray-500 mt-1">Effortlessly mark and manage employee attendance for the selected day.</p>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-wrap gap-4 items-end">
+
+        <!-- Date -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</label>
+            <input type="date" [value]="currentDate()" (change)="onDateChange($event)"
+                class="input input-sm input-bordered w-full max-w-xs bg-gray-50 text-gray-700 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg" />
+        </div>
+
+        <!-- Shift -->
+        <div class="flex flex-col gap-1 w-48">
+            <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Shift</label>
+            <select [value]="currentShift()" (change)="onShiftChange($event)"
+                class="select select-sm select-bordered w-full bg-gray-50 text-gray-700 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg">
+                @for (s of shifts; track s.value) {
+                <option [value]="s.value">{{ s.label }}</option>
+                }
+            </select>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 min-w-[200px]">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" placeholder="Search employee by name..." (input)="onSearch($event)"
+                    class="input input-sm input-bordered w-full pl-10 bg-gray-50 text-gray-700 border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg" />
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-2">
+            <button
+                class="btn btn-sm btn-outline bg-white border-gray-300 text-gray-700 hover:bg-gray-50 gap-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                Filters
+            </button>
+            <button class="btn btn-sm btn-ghost bg-gray-100 text-gray-700 hover:bg-gray-200 gap-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Bulk Actions
+            </button>
+        </div>
+    </div>
+
+    <!-- Save Button Row -->
+    <div>
+        <button (click)="saveAll()" [disabled]="isLoading()"
+            class="btn bg-slate-700 hover:bg-slate-800 text-white border-none rounded-lg px-6 gap-2 normal-case font-medium shadow-sm transition-all">
+            @if (isLoading()) {
+            <span class="loading loading-spinner loading-xs"></span>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            }
+            Save All Changes
+        </button>
+    </div>
+
+    <!-- Employee List -->
+    <div class="space-y-4" [formGroup]="attendanceForm">
+        <ng-container formArrayName="rows">
+            @for (row of rows.controls; track i; let i = $index) {
+            <div [formGroupName]="i"
+                class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm transition-shadow hover:shadow-md relative">
+
+                <!-- Status Indicator -->
+                @if (row.get('status')?.value === 'Present') {
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+                }
+
+                <div class="flex flex-col lg:flex-row gap-6 items-start">
+                    <!-- Avatar & Info -->
+                    <div class="flex items-start gap-4 min-w-[200px]">
+                        <div class="avatar">
+                            <div class="w-12 h-12 rounded-full ring-2 ring-gray-100 overflow-hidden">
+                                <img [src]="row.get('avatarUrl')?.value || 'https://ui-avatars.com/api/?name=' + row.get('employeeName')?.value + '&background=random'"
+                                    alt="Avatar" />
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">{{ row.get('employeeName')?.value }}</h3>
+                            <p class="text-xs text-gray-500">{{ row.get('designation')?.value }}</p>
+                            <p class="text-[10px] text-gray-400 font-mono mt-1">{{ row.get('employeeId')?.value }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Main Controls Grid -->
+                    <div class="flex-1 space-y-4 w-full">
+
+                        <!-- Top Row: Status, Shift, Results -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                            <!-- Status -->
+                            <div class="form-control w-full">
+                                <label class="label pt-0 pb-1">
+                                    <span class="label-text text-xs text-gray-500 font-semibold">Status</span>
+                                </label>
+                                <select formControlName="status"
+                                    class="select select-bordered select-sm w-full bg-white border-gray-300 focus:border-blue-500 rounded-lg">
+                                    @for (s of statuses; track s) {
+                                    <option [value]="s">{{ s }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Shift -->
+                            <div class="form-control w-full">
+                                <label class="label pt-0 pb-1">
+                                    <span class="label-text text-xs text-gray-500 font-semibold">Shift</span>
+                                </label>
+                                <select formControlName="shift"
+                                    class="select select-bordered select-sm w-full bg-white border-gray-300 focus:border-blue-500 rounded-lg">
+                                    @for (s of shifts; track s.value) {
+                                    <option [value]="s.value">{{ s.label }}</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <!-- Calculated: Total Hours -->
+                            <div class="form-control w-full">
+                                <label class="label pt-0 pb-1">
+                                    <span class="label-text text-xs text-gray-500 font-semibold">Total Hours</span>
+                                </label>
+                                <div
+                                    class="input input-sm input-bordered bg-gray-50 text-gray-700 font-mono flex items-center">
+                                    {{ row.get('totalWorkingHours')?.value }} hrs
+                                </div>
+                            </div>
+
+                            <!-- Calculated: Overtime -->
+                            <div class="form-control w-full">
+                                <label class="label pt-0 pb-1">
+                                    <span class="label-text text-xs text-gray-500 font-semibold">Overtime</span>
+                                </label>
+                                <div class="input input-sm input-bordered bg-gray-50 text-gray-700 font-mono flex items-center font-bold"
+                                    [class.text-green-600]="row.get('overTimeHours')?.value > 0">
+                                    {{ row.get('overTimeHours')?.value }} hrs
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Time Logs & Breaks Section -->
+                        <div class="w-full bg-slate-50 rounded-lg p-3 border border-slate-100">
+                            <div
+                                class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider flex justify-between items-center">
+                                <span>Time Logs (Check-In / Out)</span>
+                                <button type="button" (click)="addBreak(row)"
+                                    class="btn btn-xs btn-outline btn-primary gap-1">
+                                    + Add Break/Session
+                                </button>
+                            </div>
+
+                            <div formArrayName="logs" class="space-y-2">
+                                @for (log of getLogsArray(row).controls; track j; let j = $index) {
+                                <div [formGroupName]="j" class="flex gap-2 items-center flex-wrap">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-gray-400 w-8">IN</span>
+                                        <input type="time" formControlName="checkIn"
+                                            class="input input-bordered input-xs bg-white" />
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-gray-400 w-8">OUT</span>
+                                        <input type="time" formControlName="checkOut"
+                                            class="input input-bordered input-xs bg-white" />
+                                    </div>
+
+                                    @if (getLogsArray(row).controls.length > 1) {
+                                    <button (click)="removeBreak(row, j)"
+                                        class="btn btn-ghost btn-xs text-red-400 hover:text-red-600 ml-auto">
+                                        Remove
+                                    </button>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Notes Footer -->
+                        <div class="form-control w-full">
+                            <input type="text" formControlName="notes" placeholder="Add notes..."
+                                class="input input-bordered input-sm w-full bg-white border-gray-300 focus:border-blue-500 rounded-lg" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            }
+        </ng-container>
+
+        <!-- No Data State -->
+        @if (rows.length === 0 && !isLoading()) {
+        <div class="text-center py-12 text-gray-500">
+            No employees found for the selected criteria.
+        </div>
+        }
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-xs text-gray-400 py-6 border-t border-gray-200 mt-8 flex flex-col md:flex-row justify-between items-center bg-gray-50"
+        style="background-color: transparent;">
+        <span>© 2025 HRSync Attendance. All rights reserved.</span>
+        <div class="flex gap-4 mt-2 md:mt-0">
+            <a href="#" class="hover:text-gray-600">Privacy Policy</a>
+            <a href="#" class="hover:text-gray-600">Terms of Service</a>
+            <a href="#" class="hover:text-gray-600">Support</a>
+        </div>
+    </div>
+
+</div>

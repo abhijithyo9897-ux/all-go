@@ -1,0 +1,191 @@
+<div class="min-h-screen bg-slate-50 font-sans">
+
+    <!-- Main Content -->
+    <main class="p-8">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Deduction Summary Dashboard</h1>
+                    <p class="text-slate-500 mt-1">Overview of all key deduction metrics.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn btn-ghost btn-sm text-slate-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Grid with Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+                <!-- Metrics Left Columns (Takes 2/3) -->
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Main Total Card -->
+                    <div
+                        class="md:col-span-2 card bg-white border border-slate-100 p-6 rounded-xl shadow-sm flex flex-row items-center justify-between">
+                        <div>
+                            <p class="text-slate-500 text-sm font-medium uppercase tracking-wider mb-1">Total Deductions
+                            </p>
+                            <h2 class="text-4xl font-bold text-slate-800">${{deductionStats.total}}</h2>
+                            <p class="text-green-500 text-sm mt-2 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-4 h-4 mr-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0-5.94-2.28m5.94 2.28-2.28 5.941" />
+                                </svg>
+                                +12.5% from last month
+                            </p>
+                        </div>
+                        <div class="w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-8 h-8">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Small Cards -->
+                    <div class="card bg-white border border-slate-100 p-5 rounded-xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">PF Deductions</p>
+                        <h3 class="text-2xl font-bold text-slate-800">${{deductionStats.pf}}</h3>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-3">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 45%"></div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-white border border-slate-100 p-5 rounded-xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">TDS Deductions</p>
+                        <h3 class="text-2xl font-bold text-slate-800">${{deductionStats.tds}}</h3>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-3">
+                            <div class="bg-orange-500 h-1.5 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-white border border-slate-100 p-5 rounded-xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">ESI Contributions</p>
+                        <h3 class="text-2xl font-bold text-slate-800">${{deductionStats.esi}}</h3>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-3">
+                            <div class="bg-purple-500 h-1.5 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-white border border-slate-100 p-5 rounded-xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase mb-2">Professional Tax</p>
+                        <h3 class="text-2xl font-bold text-slate-800">${{deductionStats.pt}}</h3>
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 mt-3">
+                            <div class="bg-red-500 h-1.5 rounded-full" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Distribution Chart -->
+                <div
+                    class="card bg-white border border-slate-100 p-6 rounded-xl shadow-sm flex flex-col items-center justify-center">
+                    <h3 class="text-slate-800 font-bold mb-6 w-full text-left">Deduction Distribution</h3>
+
+                    <!-- CSS Conic Gradient Doughnut Chart -->
+                    <div class="relative w-48 h-48 rounded-full" style="background: conic-gradient(
+                            #3b82f6 0% 35%, 
+                            #f97316 35% 65%, 
+                            #a855f7 65% 85%, 
+                            #ef4444 85% 100%
+                        );">
+
+                        <!-- Inner White Circle to make it a doughnut -->
+                        <div
+                            class="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center shadow-inner">
+                            <span class="text-3xl font-bold text-slate-800">100%</span>
+                            <span class="text-xs text-slate-400">Total Split</span>
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="grid grid-cols-2 gap-4 mt-8 w-full">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                            <span class="text-xs text-slate-600">PF (35%)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+                            <span class="text-xs text-slate-600">TDS (30%)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                            <span class="text-xs text-slate-600">ESI (20%)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <span class="text-xs text-slate-600">PT (15%)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Table -->
+            <div class="card bg-white shadow-sm border border-slate-100 rounded-xl overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800">Recent Deduction Transactions</h3>
+                    <button class="btn btn-xs btn-outline">View All</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <tr>
+                                <th class="pl-6">Employee</th>
+                                <th>Deduction Type</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th class="pr-6 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of recentTransactions; track item.id) {
+                            <tr class="hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-none">
+                                <td class="pl-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-8 h-8 rounded-full">
+                                                <img [src]="item.avatar" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-700 text-sm">{{item.name}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-slate-600 text-sm">{{item.type}}</td>
+                                <td class="text-slate-500 text-sm">{{item.date}}</td>
+                                <td class="font-mono font-medium text-slate-800">${{item.amount}}</td>
+                                <td>
+                                    @if(item.status === 'Approved') {
+                                    <span
+                                        class="badge badge-success badge-xs gap-1 py-2 px-3 text-white">Approved</span>
+                                    } @else if (item.status === 'Pending') {
+                                    <span class="badge badge-warning badge-xs gap-1 py-2 px-3 text-white">Pending</span>
+                                    } @else {
+                                    <span class="badge badge-error badge-xs gap-1 py-2 px-3 text-white">Rejected</span>
+                                    }
+                                </td>
+                                <td class="pr-6 text-right">
+                                    <button class="btn btn-xs btn-ghost text-slate-400">...</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>

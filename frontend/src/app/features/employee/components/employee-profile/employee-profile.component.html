@@ -1,0 +1,465 @@
+<div class="min-h-screen bg-white font-sans">
+
+    <!-- Main Content -->
+    <main class="p-8 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <!-- Page Header -->
+            <div class="flex justify-between items-start mb-10 border-b border-slate-100 pb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Employee Registration</h1>
+                    <p class="text-slate-500 mt-1 text-sm">Manage new employee records efficiently.</p>
+                </div>
+                <div class="avatar">
+                    <div class="w-10 h-10 rounded-full ring-2 ring-slate-100">
+                        <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                            alt="Profile" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12" [formGroup]="empForm">
+                <!-- Form Section (8 Columns) -->
+                <div class="lg:col-span-8">
+
+                    <!-- Employee Section -->
+                    <app-section-header title="Personal Details" subtitle="Basic information about the employee."
+                        (save)="onSaveSection('Employee')">
+
+                        <!-- Employee ID (Projected into Header) -->
+                        <div header-actions class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">EMP ID</span>
+                            <div class="badge badge-lg badge-neutral text-white font-mono tracking-widest px-4 py-3">
+                                {{ empForm.get('employee.employeeId')?.value || '----' }}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6" formGroupName="employee">
+                            <!-- Tier Selection (Now in Grid) -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Tier
+                                        Category</span></label>
+                                <select formControlName="tier"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option value="" disabled selected>Select Tier</option>
+                                    <option value="A">Tier A (Default)</option>
+                                    <option value="B">Tier B (7th Paid)</option>
+                                    <option value="C">Tier C (7th & 22nd)</option>
+                                    <option value="D">Tier D (OT + Advance)</option>
+                                    <option value="E">Tier E (Daily/Weekly)</option>
+                                </select>
+                            </div>
+
+                            <!-- Salary (New Field) -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Salary
+                                        Amount</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-slate-400 font-semibold">₹</span>
+                                    </div>
+                                    <input type="number" formControlName="salary" formGroupName="employee"
+                                        class="input input-bordered w-full pl-8 h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+                                        placeholder="0.00" />
+                                </div>
+                            </div>
+
+                            <!-- Full Name -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Full Name</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" formControlName="fullName"
+                                        class="input input-bordered w-full pl-10 h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Gender</span></label>
+                                <select formControlName="gender"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Date of
+                                        Birth</span></label>
+                                <input type="date" formControlName="dateOfBirth"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                <label class="label pb-0"><span class="label-text-alt text-slate-400 text-xs">Format:
+                                        YYYY-MM-DD</span></label>
+                            </div>
+
+                            <!-- Age -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Age</span></label>
+                                <input type="number" formControlName="age"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+
+                            <!-- Contact Number -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Contact
+                                        Number</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" formControlName="contactNumber"
+                                        class="input input-bordered w-full pl-10 h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-control md:col-span-2">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Email</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                        </svg>
+                                    </div>
+                                    <input type="email" formControlName="email"
+                                        class="input input-bordered w-full pl-10 h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                            </div>
+
+                            <!-- Current Address -->
+                            <div class="form-control md:col-span-2">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Current
+                                        Address</span></label>
+                                <textarea formControlName="currentAddress"
+                                    class="textarea textarea-bordered h-24 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"></textarea>
+                            </div>
+
+                            <!-- Permanent Address -->
+                            <div class="form-control md:col-span-2">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Permanent
+                                        Address</span></label>
+                                <textarea formControlName="permanentAddress"
+                                    class="textarea textarea-bordered h-24 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"></textarea>
+                            </div>
+
+                            <!-- Blood Group -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Blood Group</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" formControlName="bloodGroup"
+                                        class="input input-bordered w-full pl-10 h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                            </div>
+
+                            <!-- Marital Status -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Marital
+                                        Status</span></label>
+                                <select formControlName="maritalStatus"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Divorced</option>
+                                </select>
+                            </div>
+
+                            <!-- Referenced By -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Referenced
+                                        By</span></label>
+                                <input type="text" formControlName="referencedBy"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+
+                            <!-- Number -->
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Number</span></label>
+                                <input type="text" formControlName="referencedByNumber"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                        </div>
+                    </app-section-header>
+
+                    <!-- Emergency Contact Section -->
+                    <app-section-header title="Emergency Contact" subtitle="In case of emergency."
+                        (save)="onSaveSection('Emergency Contact')">
+
+                        <div formArrayName="emergencyContacts">
+                            <div *ngFor="let contact of emergencyContactsArray.controls; let i=index"
+                                [formGroupName]="i" class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6 mb-4">
+                                <div class="form-control">
+                                    <label class="label pt-0 pb-2"><span
+                                            class="label-text font-medium text-slate-500 text-sm">Contact
+                                            Name</span></label>
+                                    <input type="text" formControlName="contactName"
+                                        class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                                <div class="form-control">
+                                    <label class="label pt-0 pb-2"><span
+                                            class="label-text font-medium text-slate-500 text-sm">Contact
+                                            Number</span></label>
+                                    <input type="text" formControlName="contactNumber"
+                                        class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                                <div class="form-control">
+                                    <label class="label pt-0 pb-2"><span
+                                            class="label-text font-medium text-slate-500 text-sm">Relationship</span></label>
+                                    <input type="text" formControlName="relationship"
+                                        class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-xs btn-ghost text-blue-600 mt-2" (click)="addEmergencyContact()">+ Add
+                            More</button>
+                    </app-section-header>
+
+                    <!-- Employment Section -->
+                    <app-section-header title="Employment Details"
+                        subtitle="Information related to employee's role and tenure."
+                        (save)="onSaveSection('Employment')">
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6" formGroupName="employment">
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Date of
+                                        Joining</span></label>
+                                <input type="date" formControlName="dateOfJoining"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Department</span></label>
+                                <select formControlName="department"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>Engineering</option>
+                                    <option>HR</option>
+                                    <option>Sales</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Designation</span></label>
+                                <select formControlName="designation"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>Software Engineer</option>
+                                    <option>Senior Software Engineer</option>
+                                    <option>Manager</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Employment
+                                        Type</span></label>
+                                <select formControlName="employmentType"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>FULL_TIME</option>
+                                    <option>PART_TIME</option>
+                                    <option>CONTRACT</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Probation
+                                        Period</span></label>
+                                <select formControlName="probationPeriod"
+                                    class="select select-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md font-normal">
+                                    <option>3 Months</option>
+                                    <option>6 Months</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Confirmation
+                                        Date</span></label>
+                                <input type="date" formControlName="confirmationDate"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Reporting
+                                        Manager</span></label>
+                                <input type="text" formControlName="reportingManager"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control md:col-span-2">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Qualification</span></label>
+                                <input type="text" formControlName="qualification"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Experience
+                                        (Years)</span></label>
+                                <input type="number" formControlName="experienceYears"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control md:col-span-2">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Previous
+                                        Company</span></label>
+                                <input type="text" formControlName="previousCompany"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                        </div>
+                    </app-section-header>
+
+                    <!-- Bank Section -->
+                    <app-section-header title="Bank & ID Details"
+                        subtitle="Official identification and bank account information." (save)="onSaveSection('Bank')">
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6" formGroupName="bank">
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Aadhar
+                                        Number</span></label>
+                                <input type="text" formControlName="aadharNumber"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">PAN Number</span></label>
+                                <input type="text" formControlName="panNumber"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Bank Account
+                                        No.</span></label>
+                                <input type="text" formControlName="bankAccountNo"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">IFSC Code</span></label>
+                                <input type="text" formControlName="ifscCode"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">PF Number</span></label>
+                                <input type="text" formControlName="pfNumber"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">ESI Number</span></label>
+                                <input type="text" formControlName="esiNumber"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                        </div>
+                    </app-section-header>
+
+                    <!-- Documents Section -->
+                    <app-section-header title="Documents" subtitle="Upload relevant employee documents."
+                        (save)="onSaveSection('Documents')">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6" formGroupName="documents">
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Photo
+                                        Upload</span></label>
+                                <input type="file" class="file-input file-input-bordered w-full text-slate-500" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Resume
+                                        Upload</span></label>
+                                <input type="file" class="file-input file-input-bordered w-full text-slate-500" />
+                            </div>
+                        </div>
+                    </app-section-header>
+
+                    <!-- Status & Exit Section -->
+                    <app-section-header title="Status & Exit" subtitle="Current employment status and exit details."
+                        (save)="onSaveSection('Status & Exit')">
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6" formGroupName="statusAndExit">
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Status</span></label>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <input type="checkbox" formControlName="isActive"
+                                        class="toggle toggle-success toggle-sm" />
+                                    <span class="text-sm font-medium text-slate-700">Active</span>
+                                </div>
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Exit Date</span></label>
+                                <input type="date" formControlName="exitDate"
+                                    class="input input-bordered w-full h-11 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Exit Reason</span></label>
+                                <textarea formControlName="exitReason"
+                                    class="textarea textarea-bordered h-12 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
+                                    placeholder="Reason for exit (e.g., Resignation, Termination)"></textarea>
+                            </div>
+                            <div class="form-control md:col-span-3">
+                                <label class="label pt-0 pb-2"><span
+                                        class="label-text font-medium text-slate-500 text-sm">Remarks</span></label>
+                                <textarea formControlName="remarks"
+                                    class="textarea textarea-bordered h-24 text-slate-700 bg-white border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"></textarea>
+                            </div>
+                        </div>
+                    </app-section-header>
+
+                    <!-- Bottom Actions -->
+                    <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-slate-100">
+                        <button type="button" class="btn btn-ghost text-slate-500 hover:bg-slate-50">Cancel</button>
+                        <button type="button" class="btn bg-slate-800 hover:bg-slate-700 text-white border-none px-8"
+                            (click)="onSaveEmployee()">
+                            @if (isLoading()) {
+                            <span class="loading loading-spinner"></span>
+                            }
+                            Save Employee
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Right Sidebar (Activity) -->
+                <div class="lg:col-span-4 pl-8 border-l border-slate-100">
+                    <app-recent-activity></app-recent-activity>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

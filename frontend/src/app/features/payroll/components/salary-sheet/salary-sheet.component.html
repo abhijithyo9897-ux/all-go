@@ -1,0 +1,119 @@
+<div class="p-6 max-w-full mx-auto space-y-6 font-sans text-slate-800 bg-gray-50 min-h-screen">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center pb-4 border-b border-gray-200">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Monthly Salary Sheet</h1>
+            <p class="text-gray-500 mt-1">Detailed breakdown of Regular Pay, Overtime, and Deductions.</p>
+        </div>
+        <div class="flex gap-3">
+            <button (click)="loadData()" class="btn btn-sm btn-outline bg-white hover:bg-gray-100 text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh Data
+            </button>
+            <div
+                class="stat p-0 min-h-0 bg-slate-800 text-white rounded-lg shadow-sm px-4 py-1 flex items-center gap-2">
+                <div class="stat-title text-slate-300 text-xs uppercase font-bold tracking-wider">Total Cash Payout
+                </div>
+                <div class="stat-value text-lg">{{ calculateTotalCash() | currency:'INR':'symbol':'1.0-0' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table Container -->
+    <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="table table-xs w-full text-center">
+                <!-- Header -->
+                <thead
+                    class="bg-slate-50 text-slate-500 font-bold text-[10px] leading-tight sticky top-0 uppercase tracking-wide border-b border-gray-200">
+                    <tr class="h-12 align-middle">
+                        <th class="px-2 min-w-[40px]">Sr <br>no</th>
+                        <th class="px-3 min-w-[150px] text-left">Emp Name</th>
+
+                        <th class="px-1 min-w-[60px] bg-blue-50/50 text-blue-800">Over <br>time <br>Hours</th>
+                        <th class="px-1 min-w-[50px] bg-blue-50/50 text-blue-800">Over <br>time <br>Day</th>
+                        <th class="px-1 min-w-[50px] bg-blue-50/50 text-blue-800">P Days</th>
+
+                        <th class="px-1 min-w-[80px]">Salary <br>Package</th>
+                        <th class="px-1 min-w-[80px]">Basic <br>Salary</th>
+                        <th class="px-1 min-w-[80px]">Over <br>Time</th>
+                        <th class="px-1 min-w-[70px]">Reward <br>Amount</th>
+                        <th class="px-1 min-w-[70px]">Prev <br>Month <br>Diff</th>
+
+                        <th
+                            class="px-2 min-w-[90px] bg-green-50 text-green-800 font-extrabold border-l border-r border-green-100">
+                            Gross <br>Salary</th>
+
+                        <th class="px-1 min-w-[70px] text-red-800">Loan <br>Install</th>
+                        <th class="px-1 min-w-[80px] text-red-800">Advance <br>Salary</th>
+                        <th class="px-1 min-w-[70px] text-red-800">Short <br>Time</th>
+                        <th class="px-1 min-w-[70px] text-red-800">Chq <br>Amount</th>
+                        <th class="px-1 min-w-[70px] text-red-800">Form <br>7 To 22</th>
+                        <th class="px-1 min-w-[50px] text-red-800">EPF</th>
+                        <th class="px-1 min-w-[50px] text-red-800">ESI</th>
+                        <th class="px-2 min-w-[80px] bg-red-50 text-red-800 font-bold border-l border-r border-red-100">
+                            Total <br>Ded.</th>
+
+                        <th
+                            class="px-3 min-w-[90px] bg-slate-100 font-extrabold text-slate-800 sticky right-0 shadow-[-4px_0_8px_-4px_rgba(0,0,0,0.1)]">
+                            Cash <br>(Net)</th>
+                    </tr>
+                </thead>
+                <!-- Body -->
+                <tbody class="text-[11px] text-slate-700 font-medium whitespace-nowrap divide-y divide-gray-100">
+                    @for (record of salaryRecords(); track record.id) {
+                    <tr class="hover:bg-blue-50/30 transition-colors h-10 group">
+                        <td class="text-center font-mono text-gray-400">{{ record.sNo }}</td>
+                        <td class="text-left px-3">
+                            <span class="font-bold text-slate-800 block truncate max-w-[140px]"
+                                title="{{ record.employeeName }}">{{ record.employeeName }}</span>
+                        </td>
+
+                        <td class="bg-blue-50/30 font-mono text-blue-700">{{ record.overTimeHours | number:'1.2-2' }}
+                        </td>
+                        <td class="bg-blue-50/30 font-mono text-blue-700">{{ record.overTimeDays | number:'1.2-2' }}
+                        </td>
+                        <td class="bg-blue-50/30 font-mono text-blue-700">{{ record.pDays | number:'1.2-2' }}</td>
+
+                        <td class="font-mono">{{ record.salaryPackage | number }}</td>
+                        <td class="font-mono text-slate-500">{{ record.basicSalary | number }}</td>
+                        <td class="font-mono">{{ record.overTimeAmount | number }}</td>
+                        <td class="font-mono">{{ record.rewardAmount || '-' }}</td>
+                        <td class="font-mono">{{ record.prevMonthDiff || '-' }}</td>
+
+                        <td class="font-mono font-bold bg-green-50 text-green-700 border-l border-r border-green-100">{{
+                            record.grossSalary | currency:'INR':'symbol':'1.0-0' }}</td>
+
+                        <td class="font-mono text-red-600">{{ record.loanInstallment || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.advanceSalary || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.shortTimeAmount || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.chqAmount || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.form7To22 || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.epf || '-' }}</td>
+                        <td class="font-mono text-red-600">{{ record.esi || '-' }}</td>
+
+                        <td class="font-mono font-bold bg-red-50 text-red-700 border-l border-r border-red-100">{{
+                            record.totalDeduction | number }}</td>
+
+                        <td
+                            class="font-mono font-extrabold bg-slate-100 text-slate-900 sticky right-0 shadow-[-4px_0_8px_-4px_rgba(0,0,0,0.1)] group-hover:bg-blue-100/50">
+                            {{ record.cash | currency:'INR':'symbol':'1.0-0' }}
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @if (isLoading()) {
+    <div class="flex justify-center p-12">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+    }
+</div>

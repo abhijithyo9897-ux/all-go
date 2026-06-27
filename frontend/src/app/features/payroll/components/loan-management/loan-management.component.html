@@ -1,0 +1,161 @@
+<div class="min-h-screen bg-slate-50 font-sans">
+
+    <!-- Main Content -->
+    <main class="p-8 transition-all duration-300">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Advance Salary & Loans</h1>
+                    <p class="text-slate-500 mt-1">Manage employee cash advances and loan deductions.</p>
+                </div>
+                <button (click)="showAdvanceForm.set(!showAdvanceForm())"
+                    class="btn bg-slate-800 hover:bg-slate-700 text-white border-none gap-2">
+                    @if(showAdvanceForm()) {
+                    Hide Form
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Give Advance
+                    }
+                </button>
+            </div>
+
+            <!-- Give Advance Form (Collapsible) -->
+            @if (showAdvanceForm()) {
+            <div
+                class="card bg-white border border-slate-100 p-6 rounded-xl shadow-sm mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+                <h2 class="text-sm font-bold uppercase tracking-wide mb-6 text-slate-400">New Advance Entry</h2>
+                <form [formGroup]="advanceForm" (ngSubmit)="onSaveLoan()"
+                    class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Employee ID</span></label>
+                        <input type="text" formControlName="employeeId"
+                            class="input input-bordered w-full h-11 bg-white text-slate-700"
+                            placeholder="e.g. EMP001" />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Type</span></label>
+                        <select formControlName="type"
+                            class="select select-bordered w-full h-11 bg-white text-slate-700 font-normal">
+                            <option value="Low">Advance Salary (Low)</option>
+                            <option value="Heavy">Advance to Staff (Heavy)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Amount</span></label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                            <input type="number" formControlName="amount"
+                                class="input input-bordered w-full h-11 bg-white text-slate-700 pl-8"
+                                placeholder="0.00" />
+                        </div>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Deduction Type</span></label>
+                        <select formControlName="deductionType"
+                            class="select select-bordered w-full h-11 bg-white text-slate-700 font-normal">
+                            <option value="Auto">Auto Monthly</option>
+                            <option value="Block">Block Loan</option>
+                        </select>
+                    </div>
+
+                    @if (advanceForm.get('deductionType')?.value === 'Auto') {
+                    <div class="form-control w-full md:col-span-2">
+                        <label class="label pt-0 pb-2"><span
+                                class="label-text font-medium text-slate-500 text-sm">Monthly Deduction</span></label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                            <input type="number" formControlName="autoDeductionAmount"
+                                class="input input-bordered w-full h-11 bg-white text-slate-700 pl-8" />
+                        </div>
+                    </div>
+                    }
+
+                    <div class="flex gap-3 md:col-span-2 justify-end">
+                        <button type="button" (click)="showAdvanceForm.set(false)"
+                            class="btn btn-ghost text-slate-500">Cancel</button>
+                        <button type="submit" [disabled]="advanceForm.invalid"
+                            class="btn bg-blue-600 hover:bg-blue-700 text-white border-none px-6">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+            }
+
+            <!-- Advance Salary Table -->
+            <div class="card bg-white shadow-sm border border-slate-100 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead class="bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
+                            <tr>
+                                <th class="pl-6 py-4">Employee</th>
+                                <th class="py-4">Department</th>
+                                <th class="py-4">Month</th>
+                                <th class="py-4">Salary Pkg</th>
+                                <th class="py-4">Advance</th>
+                                <th class="py-4">Status</th>
+                                <th class="py-4 pr-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (loan of loans(); track loan.id) {
+                            <tr
+                                class="group hover:bg-slate-50/50 border-b border-slate-50 last:border-none transition-colors">
+                                <td class="pl-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar placeholder">
+                                            <div class="bg-blue-50 text-blue-600 rounded-lg w-10 h-10">
+                                                <span class="text-xs font-bold">{{loan.name.charAt(0)}}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-800">{{loan.name}}</div>
+                                            <div class="text-xs text-slate-500 font-mono">{{loan.employeeId}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-slate-600">{{ loan.department }}</td>
+                                <td class="text-slate-600">{{ loan.month }}</td>
+                                <td class="font-mono text-slate-600">${{ loan.salaryPackage }}</td>
+                                <td class="font-bold text-slate-800 font-mono">${{ loan.advance7To22 }}</td>
+                                <td>
+                                    @if(loan.paidAmount > 0) {
+                                    <div class="badge badge-success badge-soft gap-2 text-xs font-semibold px-3 py-2.5">
+                                        Paid: ${{loan.paidAmount}}</div>
+                                    } @else {
+                                    <div class="badge badge-warning badge-soft gap-2 text-xs font-semibold px-3 py-2.5">
+                                        Pending</div>
+                                    }
+                                </td>
+                                <td class="pr-6 text-right">
+                                    <button class="btn btn-sm btn-ghost text-slate-400 hover:text-blue-600">
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @if (isLoading()) {
+            <div class="flex justify-center p-8">
+                <span class="loading loading-spinner loading-lg text-primary"></span>
+            </div>
+            }
+
+        </div>
+    </main>
+</div>

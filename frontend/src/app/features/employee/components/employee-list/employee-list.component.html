@@ -1,0 +1,211 @@
+<div class="min-h-screen bg-slate-50 font-sans relative overflow-hidden">
+
+    <!-- Main Content -->
+    <main class="p-8 transition-all duration-300" [class.mr-96]="selectedEmployee()">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Employees</h1>
+                    <p class="text-slate-500 mt-1">Manage your team members and their roles.</p>
+                </div>
+                <button class="btn bg-slate-800 hover:bg-slate-700 text-white border-none" (click)="addNewEmployee()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add Employee
+                </button>
+            </div>
+
+            <!-- Stats/Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="card bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Total Employees</p>
+                        <p class="text-2xl font-bold text-slate-800">45</p>
+                    </div>
+                </div>
+                <div class="card bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Active</p>
+                        <p class="text-2xl font-bold text-slate-800">42</p>
+                    </div>
+                </div>
+                <div class="card bg-white border border-slate-100 p-4 rounded-xl shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">On Leave</p>
+                        <p class="text-2xl font-bold text-slate-800">3</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-white shadow-sm border border-slate-100 rounded-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead class="bg-slate-50 text-slate-500 font-medium">
+                            <tr>
+                                <th class="pl-6 py-4">Employee</th>
+                                <th class="py-4">Department</th>
+                                <th class="py-4">Type</th>
+                                <th class="py-4">Status</th>
+                                <th class="pr-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (emp of employees; track emp.id) {
+                            <tr class="hover:bg-slate-50 border-b border-slate-50 last:border-none cursor-pointer transition-colors"
+                                [class.bg-blue-50]="selectedEmployee()?.id === emp.id" (click)="viewEmployee(emp)">
+                                <td class="pl-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="mask mask-squircle w-10 h-10">
+                                                <img [src]="emp.avatar" [alt]="emp.name" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-slate-800">{{emp.name}}</div>
+                                            <div class="text-xs text-slate-500">{{emp.role}}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-slate-600">{{emp.department}}</td>
+                                <td>
+                                    <span
+                                        class="badge badge-ghost text-xs text-slate-600 bg-slate-100">{{emp.type}}</span>
+                                </td>
+                                <td>
+                                    @if(emp.status === 'Active') {
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                        <span class="text-sm text-slate-600">Active</span>
+                                    </div>
+                                    } @else {
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-2 h-2 rounded-full bg-slate-400"></div>
+                                        <span class="text-sm text-slate-600">{{emp.status}}</span>
+                                    </div>
+                                    }
+                                </td>
+                                <td class="pr-6 text-right">
+                                    <button class="btn btn-sm btn-ghost text-slate-400 hover:text-blue-600"
+                                        (click)="$event.stopPropagation(); viewEmployee(emp)">View</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Right Slide-over Panel -->
+    <div class="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl transform transition-transform duration-300 z-50 border-l border-slate-200"
+        [class.translate-x-full]="!selectedEmployee()" [class.translate-x-0]="selectedEmployee()">
+
+        @if (selectedEmployee()) {
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-slate-100 flex justify-between items-start bg-slate-50">
+                <div class="flex items-center gap-4">
+                    <div class="avatar">
+                        <div class="w-16 h-16 rounded-full ring ring-white ring-offset-2">
+                            <img [src]="selectedEmployee().avatar" />
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800">{{selectedEmployee().name}}</h3>
+                        <p class="text-slate-500 text-sm">{{selectedEmployee().role}}</p>
+                        <div class="badge badge-sm badge-success gap-1 mt-1 text-white">Active</div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-circle btn-ghost text-slate-400" (click)="closeSidePanel()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Employment Details</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-600">Employee ID</span>
+                            <span class="text-sm font-medium text-slate-800">EMP-{{selectedEmployee().id}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-600">Department</span>
+                            <span class="text-sm font-medium text-slate-800">{{selectedEmployee().department}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-600">Type</span>
+                            <span class="text-sm font-medium text-slate-800">{{selectedEmployee().type}}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-600">Date of Joining</span>
+                            <span class="text-sm font-medium text-slate-800">12 Jan, 2022</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Contact Info</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                            </svg>
+                            <span class="text-sm text-slate-700">alice.johnson@company.com</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-5 h-5 text-slate-400">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+                            </svg>
+                            <span class="text-sm text-slate-700">+1 (555) 123-4567</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="flex gap-2">
+                    <button class="btn btn-sm btn-outline flex-1">View Profile</button>
+                    <button class="btn btn-sm btn-outline flex-1">Payslips</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
